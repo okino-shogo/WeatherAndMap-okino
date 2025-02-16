@@ -21,7 +21,7 @@ struct ContentView: View {
         NavigationStack{
             ScrollView {
                 VStack(spacing: 20) {
-                    DailyWeatherView(weatherVM: weatherVM)
+                    DailyWeatherView(weatherVM: weatherVM, locationManager: locationManager)
                     HourlyWeatherView(weatherVM: weatherVM)
                 }
                 .padding()
@@ -29,6 +29,19 @@ struct ContentView: View {
             }
             .navigationTitle("現在地: \(locationManager.address)")
             .navigationBarTitleDisplayMode(.inline) // タイトルの書式
+            // マップ画面へのボタンをナビゲーションバーに追加
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        MyLocationView(locationManager: locationManager)
+                    } label: {
+                        Image(systemName: "map")
+                    }
+                }
+            }
+            .refreshable {
+                getWeatherForecast()
+            }
         }
         .padding()
         .onAppear {
